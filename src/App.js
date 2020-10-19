@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, Component } from "react";
+import Navbar from "./components/layout/Navbar";
+import Users from "./components/users/Users";
+import axios from "axios";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    users: [],
+    loading: false,
+  };
+
+  // lifecycle method
+  // when components loaded make a request
+  async componentDidMount() {
+    this.setState({ loading: true });
+
+    const res = await axios.get("https://api.github.com/users");
+
+    this.setState({ users: res.data, loading: false });
+
+    // console.log(res.data);
+  }
+
+  foo = () => "Bar";
+
+  render() {
+    return (
+      <div className="App">
+        <Navbar />
+        <div className="container">
+          <Users loading={this.state.loading} users={this.state.users} />
+        </div>
+
+        {/* {loading ? <h4>Loading....</h4> : <h1>Hello {name}</h1>} */}
+      </div>
+    );
+  }
 }
 
 export default App;
